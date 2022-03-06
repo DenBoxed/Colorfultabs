@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/global.css"?>
-<?xml-stylesheet href="chrome://tabmixplus/skin/preferences.css"?>
-<?xml-stylesheet href="chrome://tabmixplus/skin/shortcuts.css"?>
+<?xml-stylesheet href="chrome://colorfulTabs/skin/preferences.css"?>
+<?xml-stylesheet href="chrome://colorfulTabs/skin/shortcuts.css"?>
 
 <!DOCTYPE prefwindow [
-<!ENTITY % pref-tabmixDTD SYSTEM "chrome://tabmixplus/locale/pref-tabmix.dtd">
-%pref-tabmixDTD;
-<!ENTITY % tabmixDTD SYSTEM "chrome://tabmixplus/locale/tabmix.dtd">
-%tabmixDTD;
+<!ENTITY % pref-clrtabsDTD SYSTEM "chrome://colorfulTabs/locale/pref-clrtabs.dtd">
+%pref-clrtabsDTD;
+<!ENTITY % clrtabsDTD SYSTEM "chrome://colorfulTabs/locale/clrtabs.dtd">
+%clrtabsDTD;
 ]>
 
 <prefwindow type="prefwindow" class="prefwindow"
-            id="TabMIxPreferences"
-            windowtype="mozilla:tabmixopt"
+            id="clrtabsPreferences"
+            windowtype="mozilla:clrtabsopt"
             title="&page.header.title;"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             autosize="true"
@@ -30,34 +30,28 @@
             tabindex="0">
 
   <!-- scripts -->
-  <script type="application/javascript" src="chrome://tabmixplus/content/preferences/prefs-ce.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/preferences/checkbox_tmp-ce.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/preferences/shortcuts-ce.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/broadcaster.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/utils.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/preferences/numberinput.js"/>
-  <script type="application/javascript" src="chrome://tabmixplus/content/preferences/preferences.js"/>
+  <script type="application/javascript" src="chrome://colorfulTabs/content/preferences/preferences.js"/>
 
   <prefpane id="paneLinks" label="&tab.links;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/links.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/links.xhtml"/>
   <prefpane id="paneEvents" label="&tab.events;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/events.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/events.xhtml"/>
   <prefpane id="paneAppearance" label="&tab.appearance;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/appearance.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/appearance.xhtml"/>
   <prefpane id="paneMouse" label="&tab.mouse;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/mouse.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/mouse.xhtml"/>
   <prefpane id="paneMenu" label="&tab.menu;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/menu.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/menu.xhtml"/>
   <prefpane id="paneSession" label="&tab.session;" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/session.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/session.xhtml"/>
   <prefpane id="paneIncompatible" label="Error" class="prefpane"
-            src="chrome://tabmixplus/content/preferences/incompatible.xhtml"/>
+            src="chrome://colorfulTabs/content/preferences/incompatible.xhtml"/>
   <prefpane id="broadcasters" hidden="true" class="prefpane">
     <preferences>
-      <preference id="pref_singleWindow" name="extensions.tabmix.singleWindow" type="bool"
+      <preference id="pref_singleWindow" name="extensions.clrtabs.singleWindow" type="bool"
                   onchange="if (typeof gLinksPane == 'object') gLinksPane.singleWindow(this.value);"/>
-      <preference id="pref_undoClose"    name="extensions.tabmix.undoClose"    type="bool"/>
-      <preference id="pref_instantApply" name="extensions.tabmix.instantApply" type="bool"
+      <preference id="pref_undoClose"    name="extensions.clrtabs.undoClose"    type="bool"/>
+      <preference id="pref_instantApply" name="extensions.clrtabs.instantApply" type="bool"
                   onchange="toggleInstantApply(this);"/>
     </preferences>
     <broadcasterset id="main:Broadcaster">
