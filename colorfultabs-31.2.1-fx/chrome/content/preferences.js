@@ -13,7 +13,7 @@ var gPrefWindow = {
   set instantApply(val) {document.documentElement.instantApply = val;},
   get instantApply() {return document.documentElement.instantApply;},
   onContentLoaded() {
-    const prefWindow = $("TabMIxPreferences");
+    const prefWindow = $("clrtabsPreferences");
     if (window.toString() != "[object ChromeWindow]") {
       prefWindow.style.display = "flex";
       prefWindow.setAttribute("in-tab", true);
@@ -23,11 +23,11 @@ var gPrefWindow = {
   init() {
     this._initialized = true;
 
-    var prefWindow = $("TabMIxPreferences");
+    var prefWindow = $("clrtabsPreferences");
 
-    if (TabmixSvc.isMac)
+    if (clrtabsSvc.isMac)
       prefWindow.setAttribute("mac", true);
-    else if (TabmixSvc.isLinux) {
+    else if (clrtabsSvc.isLinux) {
       prefWindow.setAttribute("linux", true);
     }
 
@@ -63,8 +63,8 @@ var gPrefWindow = {
     var paneButton = docElt.getElementsByAttribute("pane", "broadcasters")[0];
     paneButton.collapsed = true;
 
-    $("syncPrefs").setAttribute("checked", Tabmix.prefs.getBoolPref("syncPrefs"));
-    $("instantApply").setAttribute("checked", Tabmix.prefs.getBoolPref("instantApply"));
+    $("syncPrefs").setAttribute("checked", clrtabs.prefs.getBoolPref("syncPrefs"));
+    $("instantApply").setAttribute("checked", clrtabs.prefs.getBoolPref("instantApply"));
     positionDonateButton();
   },
 
@@ -90,8 +90,8 @@ var gPrefWindow = {
   deinit() {
     window.removeEventListener("change", this);
     window.removeEventListener("beforeaccept", this);
-    delete Tabmix.getTopWin().tabmix_setSession;
-    Shortcuts.prefsChangedByTabmix = false;
+    delete clrtabs.getTopWin().clrtabs_setSession;
+    Shortcuts.prefsChangedByclrtabs = false;
     window.gIncompatiblePane.deinit();
   },
 
@@ -109,9 +109,9 @@ var gPrefWindow = {
       case "beforeaccept":
         this.applyBlockedChanges();
         if (!this.instantApply) {
-          // prevent TMP_SessionStore.setService from running
-          Tabmix.getTopWin().tabmix_setSession = true;
-          Shortcuts.prefsChangedByTabmix = true;
+          // prevent clr_SessionStore.setService from running
+          clrtabs.getTopWin().clrtabs_setSession = true;
+          Shortcuts.prefsChangedByclrtabs = true;
         }
         break;
     }
@@ -205,9 +205,9 @@ var gPrefWindow = {
     if (this.instantApply)
       return;
 
-    // set flag to prevent TabmixTabbar.updateSettings from run for each change
-    Tabmix.prefs.setBoolPref("setDefault", true);
-    Shortcuts.prefsChangedByTabmix = true;
+    // set flag to prevent clrtabsTabbar.updateSettings from run for each change
+    clrtabs.prefs.setBoolPref("setDefault", true);
+    Shortcuts.prefsChangedByclrtabs = true;
     // Write all values to preferences.
     for (let preference of this.changes) {
       this.changes.delete(preference);
@@ -216,7 +216,7 @@ var gPrefWindow = {
       preference.batching = false;
     }
     this.afterShortcutsChanged();
-    Tabmix.prefs.clearUserPref("setDefault"); // this trigger TabmixTabbar.updateSettings
+    clrtabs.prefs.clearUserPref("setDefault"); // this trigger clrtabsTabbar.updateSettings
     Services.prefs.savePrefFile(null);
   },
 
@@ -243,7 +243,7 @@ var gPrefWindow = {
   removeItemAndPrefById(id) {
     const item = document.querySelector(`[preference=${id}]`);
     if (!item) {
-      throw new Error(`Tabmix:\n ${id} is not a preference`);
+      throw new Error(`clrtabs:\n ${id} is not a preference`);
     }
     item.remove();
     this.removeChild(id);
@@ -287,7 +287,7 @@ var gPrefWindow = {
     if (item.hasAttribute("inverseDependency"))
       val = !val;
     // remove disabled when the value is false
-    Tabmix.setItem(item, "disabled", val || null);
+    clrtabs.setItem(item, "disabled", val || null);
   },
 
   tabSelectionChanged(event) {
@@ -310,7 +310,7 @@ var gPrefWindow = {
   },
 
   afterShortcutsChanged() {
-    Shortcuts.prefsChangedByTabmix = false;
+    Shortcuts.prefsChangedByclrtabs = false;
     if (typeof gMenuPane == "object" &&
       $("pref_shortcuts").value != $("shortcut-group").value)
       gMenuPane.initializeShortcuts();
@@ -342,7 +342,7 @@ function getPrefByType(prefName) {
 
     return Services.prefs["get" + fn](prefName);
   } catch (ex) {
-    Tabmix.log("can't read preference " + prefName + "\n" + ex, true);
+    clrtabs.log("can't read preference " + prefName + "\n" + ex, true);
   }
   return null;
 }
@@ -357,7 +357,7 @@ function setPrefByType(prefName, newValue, atImport) {
     if (!atImport || !setPrefAfterImport(pref))
       setPref(pref);
   } catch (ex) {
-    Tabmix.log("can't write preference " + prefName + "\nvalue " + pref.value +
+    clrtabs.log("can't write preference " + prefName + "\nvalue " + pref.value +
       "\n" + ex, true);
   }
 }
@@ -375,18 +375,18 @@ function setPrefAfterImport(aPref) {
   // in prev version we use " " for to export string to file
   aPref.value = aPref.value.replace(/^"*|"*$/g, "");
 
-  // preference that exist in the default branch but no longer in use by Tabmix
+  // preference that exist in the default branch but no longer in use by clrtabs
   switch (aPref.name) {
     case "browser.tabs.autoHide":
-      // from tabmix 0.3.6.0.080223 we use extensions.tabmix.hideTabbar
-      Tabmix.prefs.setIntPref("hideTabbar", aPref.value ? 1 : 0);
+      // from clrtabs 0.3.6.0.080223 we use extensions.clrtabs.hideTabbar
+      clrtabs.prefs.setIntPref("hideTabbar", aPref.value ? 1 : 0);
       return true;
     case "browser.tabs.closeButtons":
       // we use browser.tabs.closeButtons only in 0.3.8.3
       if (aPref.value < 0 || aPref.value > 6)
         aPref.value = 6;
       aPref.value = [3, 5, 1, 1, 2, 4, 1][aPref.value];
-      Tabmix.prefs.setIntPref("tabs.closeButtons", aPref.value);
+      clrtabs.prefs.setIntPref("tabs.closeButtons", aPref.value);
       return true;
   }
 
@@ -394,14 +394,14 @@ function setPrefAfterImport(aPref) {
   if (Services.prefs.prefIsLocked(aPref.name))
     return true;
   // replace old preference by setting new value to it
-  // and call gTMPprefObserver.updateSettings to replace it.
+  // and call gclrprefObserver.updateSettings to replace it.
   if (aPref.type == Services.prefs.PREF_INVALID) {
     let val = parseInt(aPref.value);
     aPref.type = typeof val == "number" && !isNaN(val) ?
       64 : /true|false/i.test(aPref.value) ? 128 : 32;
     if (aPref.type == 128)
       aPref.value = /true/i.test(aPref.value);
-    let prefsUtil = Tabmix.getTopWin().gTMPprefObserver;
+    let prefsUtil = clrtabs.getTopWin().gclrprefObserver;
     prefsUtil.preventUpdate = true;
     setPref(aPref);
     prefsUtil.preventUpdate = false;
@@ -418,15 +418,15 @@ function setPrefAfterImport(aPref) {
 
 var sessionPrefs = ["browser.sessionstore.resume_from_crash",
   "browser.startup.page",
-  "extensions.tabmix.sessions.manager",
-  "extensions.tabmix.sessions.crashRecovery"];
+  "extensions.clrtabs.sessions.manager",
+  "extensions.clrtabs.sessions.crashRecovery"];
 
 XPCOMUtils.defineLazyGetter(this, "gPreferenceList", () => {
-  // other settings not in extensions.tabmix. branch that we save
+  // other settings not in extensions.clrtabs. branch that we save
   let otherPrefs = [
-    "browser.allTabs.previews", TabmixSvc.sortByRecentlyUsed,
+    "browser.allTabs.previews", clrtabsSvc.sortByRecentlyUsed,
     "browser.link.open_newwindow", "browser.link.open_newwindow.override.external",
-    "browser.link.open_newwindow.restriction", TabmixSvc.newtabUrl,
+    "browser.link.open_newwindow.restriction", clrtabsSvc.newtabUrl,
     "browser.search.context.loadInBackground", "browser.search.openintab",
     "browser.sessionstore.interval", "browser.sessionstore.max_tabs_undo",
     "browser.sessionstore.privacy_level",
@@ -443,26 +443,26 @@ XPCOMUtils.defineLazyGetter(this, "gPreferenceList", () => {
   ];
 
   let prefs = Services.prefs.getDefaultBranch("");
-  let tabmixPrefs = Services.prefs.getChildList("extensions.tabmix.").sort();
+  let clrtabsPrefs = Services.prefs.getChildList("extensions.clrtabs.").sort();
   // filter out preference without default value
-  tabmixPrefs = otherPrefs.concat(tabmixPrefs).filter(pref => {
+  clrtabsPrefs = otherPrefs.concat(clrtabsPrefs).filter(pref => {
     try {
       return prefs["get" + PrefFn[prefs.getPrefType(pref)]](pref) !== undefined;
     } catch (ex) { }
     return false;
   });
-  return tabmixPrefs;
+  return clrtabsPrefs;
 });
 
 XPCOMUtils.defineLazyGetter(this, "_sminstalled", () => {
-  return Tabmix.getTopWin().Tabmix.extensions.sessionManager;
+  return clrtabs.getTopWin().clrtabs.extensions.sessionManager;
 });
 
 function defaultSetting() {
   gPrefWindow.resetChanges();
-  // set flag to prevent TabmixTabbar.updateSettings from run for each change
-  Tabmix.prefs.setBoolPref("setDefault", true);
-  Shortcuts.prefsChangedByTabmix = true;
+  // set flag to prevent clrtabsTabbar.updateSettings from run for each change
+  clrtabs.prefs.setBoolPref("setDefault", true);
+  Shortcuts.prefsChangedByclrtabs = true;
   let SMinstalled = _sminstalled;
   let prefs = !SMinstalled ? gPreferenceList :
     gPreferenceList.map(pref => !sessionPrefs.includes(pref));
@@ -474,7 +474,7 @@ function defaultSetting() {
   Services.prefs.setBoolPref("browser.sessionstore.resume_from_crash", false);
 
   gPrefWindow.afterShortcutsChanged();
-  Tabmix.prefs.clearUserPref("setDefault");
+  clrtabs.prefs.clearUserPref("setDefault");
   Services.prefs.savePrefFile(null);
   updateInstantApply();
 }
@@ -490,7 +490,7 @@ function updateInstantApply() {
     preference.updateElements();
   }
 
-  if (Tabmix.prefs.getBoolPref('instantApply') !== checked) {
+  if (clrtabs.prefs.getBoolPref('instantApply') !== checked) {
     menuItem.setAttribute("checked", !checked);
     document.documentElement.instantApply = !checked;
   }
@@ -509,7 +509,7 @@ function toggleInstantApply(item) {
   document.documentElement.instantApply = checked;
   if (item.id === "instantApply") {
     preference._running = true;
-    Tabmix.prefs.setBoolPref("instantApply", checked);
+    clrtabs.prefs.setBoolPref("instantApply", checked);
     preference._running = false;
   }
 
@@ -533,9 +533,9 @@ function positionDonateButton() {
 
 function toggleSyncPreference() {
   const sync = "services.sync.prefs.sync.";
-  let fn = Tabmix.prefs.getBoolPref("syncPrefs") ? "clearUserPref" : "setBoolPref";
-  Tabmix.prefs[fn]("syncPrefs", true);
-  let exclude = ["extensions.tabmix.sessions.onStart.sessionpath"];
+  let fn = clrtabs.prefs.getBoolPref("syncPrefs") ? "clearUserPref" : "setBoolPref";
+  clrtabs.prefs[fn]("syncPrefs", true);
+  let exclude = ["extensions.clrtabs.sessions.onStart.sessionpath"];
   gPreferenceList.forEach(pref => {
     if (!exclude.includes(pref))
       Services.prefs[fn](sync + pref, true);
@@ -551,15 +551,15 @@ function exportData() {
       let patterns = gPreferenceList.map(pref => {
         return "\n" + pref + "=" + getPrefByType(pref);
       });
-      patterns.unshift("tabmixplus");
-      if (TabmixSvc.version(860)) {
+      patterns.unshift("colorfulTabs");
+      if (clrtabsSvc.version(860)) {
         IOUtils.writeUTF8(file.path, patterns.join(""));
       } else {
         // eslint-disable-next-line mozilla/reject-osfile
-        OS.File.writeAtomic(file.path, patterns.join(""), {encoding: "utf-8", tmpPath: file.path + ".tmp"});
+        OS.File.writeAtomic(file.path, patterns.join(""), {encoding: "utf-8", clrPath: file.path + ".clr"});
       }
     }
-  }).catch(Tabmix.reportError);
+  }).catch(clrtabs.reportError);
 }
 
 async function importData() {
@@ -567,7 +567,7 @@ async function importData() {
     const file = await showFilePicker("open");
     if (!file) return;
     let input;
-    if (TabmixSvc.version(860)) {
+    if (clrtabsSvc.version(860)) {
       input = await IOUtils.readUTF8(file.path);
     } else {
       // eslint-disable-next-line mozilla/reject-osfile
@@ -579,7 +579,7 @@ async function importData() {
       loadData(input.replace(/\r\n/g, "\n").split("\n"));
     }
   } catch (ex) {
-    Tabmix.reportError(ex);
+    clrtabs.reportError(ex);
   }
 }
 
@@ -599,7 +599,7 @@ function showFilePicker(mode) {
       mode = nsIFilePicker.modeOpen;
     else {
       fp.defaultExtension = "txt";
-      fp.defaultString = "TMPpref";
+      fp.defaultString = "clrpref";
       mode = nsIFilePicker.modeSave;
     }
     fp.init(window, null, mode);
@@ -611,36 +611,36 @@ function showFilePicker(mode) {
 }
 
 function loadData(pattern) {
-  if (pattern[0] != "tabmixplus") {
+  if (pattern[0] != "colorfulTabs") {
     //  Can not import because it is not a valid file.
-    let msg = TabmixSvc.getString("tmp.importPref.error1");
-    let title = TabmixSvc.getString("tabmixoption.error.title");
+    let msg = clrtabsSvc.getString("clr.importPref.error1");
+    let title = clrtabsSvc.getString("clrtabsoption.error.title");
     Services.prompt.alert(window, title, msg);
     return;
   }
 
   gPrefWindow.resetChanges();
-  // set flag to prevent TabmixTabbar.updateSettings from run for each change
-  Tabmix.prefs.setBoolPref("setDefault", true);
+  // set flag to prevent clrtabsTabbar.updateSettings from run for each change
+  clrtabs.prefs.setBoolPref("setDefault", true);
 
-  // disable both Firefox & Tabmix session manager to prevent our prefs observer to block the change
+  // disable both Firefox & clrtabs session manager to prevent our prefs observer to block the change
   let SMinstalled = _sminstalled;
   if (!SMinstalled) {
-    Tabmix.prefs.setBoolPref("sessions.manager", false);
-    Tabmix.prefs.setBoolPref("sessions.crashRecovery", false);
+    clrtabs.prefs.setBoolPref("sessions.manager", false);
+    clrtabs.prefs.setBoolPref("sessions.crashRecovery", false);
     Services.prefs.setBoolPref("browser.sessionstore.resume_from_crash", false);
     Services.prefs.setIntPref("browser.startup.page", 0);
     Services.prefs.savePrefFile(null);
   }
 
   // set updateOpenedTabsLockState before lockallTabs and lockAppTabs
-  let pref = "extensions.tabmix.updateOpenedTabsLockState=";
+  let pref = "extensions.clrtabs.updateOpenedTabsLockState=";
   let index = pattern.indexOf(pref + true) + pattern.indexOf(pref + false) + 1;
   if (index > 0)
     pattern.splice(1, 0, pattern.splice(index, 1)[0]);
 
   var prefName, prefValue;
-  Shortcuts.prefsChangedByTabmix = true;
+  Shortcuts.prefsChangedByclrtabs = true;
   for (let i = 1; i < pattern.length; i++) {
     let valIndex = pattern[i].indexOf("=");
     if (valIndex > 0) {
@@ -652,14 +652,14 @@ function loadData(pattern) {
     }
   }
   gPrefWindow.afterShortcutsChanged();
-  var browserWindow = Tabmix.getTopWin();
-  browserWindow.gTMPprefObserver.updateTabClickingOptions();
-  Tabmix.prefs.clearUserPref("setDefault");
+  var browserWindow = clrtabs.getTopWin();
+  browserWindow.gclrprefObserver.updateTabClickingOptions();
+  clrtabs.prefs.clearUserPref("setDefault");
   Services.prefs.savePrefFile(null);
   updateInstantApply();
 }
 
-// this function is called from Tabmix.openOptionsDialog if the dialog already opened
+// this function is called from clrtabs.openOptionsDialog if the dialog already opened
 function showPane(paneID) {
   let docElt = document.documentElement;
   let paneToLoad = document.getElementById(paneID);
@@ -669,9 +669,9 @@ function showPane(paneID) {
 }
 
 function openHelp(helpTopic) {
-  var helpPage = "http://tabmixplus.org/support/viewtopic.php?t=3&p=";
+  var helpPage = "http://www.addongenie.com/colorfultabs-documentation-and-helpp=";
   // Check if the help page already open in the top window
-  var recentWindow = Tabmix.getTopWin();
+  var recentWindow = clrtabs.getTopWin();
   var tabBrowser = recentWindow.gBrowser;
   function selectHelpPage() {
     let browsers = tabBrowser.browsers;
@@ -679,7 +679,7 @@ function openHelp(helpTopic) {
       let browser = browsers[i];
       if (browser.currentURI.spec.startsWith(helpPage)) {
         tabBrowser.tabContainer.selectedIndex = i;
-        browser.tabmix_allowLoad = true;
+        browser.clrtabs_allowLoad = true;
         return true;
       }
     }
@@ -700,7 +700,7 @@ function openHelp(helpTopic) {
 }
 
 function donate() {
-  const recentWindow = Tabmix.getTopWin();
+  const recentWindow = clrtabs.getTopWin();
   const tabBrowser = recentWindow.gBrowser;
   const url = "https://www.paypal.com/donate?hosted_button_id=W25388CZ3MNU8";
   const where = tabBrowser.selectedTab.isEmpty ? "current" : "tab";
@@ -731,9 +731,9 @@ window.gIncompatiblePane = {
   },
 
   checkForIncompatible(aShowList) {
-    let tmp = {};
-    ChromeUtils.import("chrome://tabmix-resource/content/extensions/CompatibilityCheck.jsm", tmp);
-    tmp = new tmp.CompatibilityCheck(window, aShowList, true);
+    let clr = {};
+    ChromeUtils.import("chrome://clrtabs-resource/content/extensions/CompatibilityCheck.jsm", clr);
+    clr = new clr.CompatibilityCheck(window, aShowList, true);
   },
 
   // call back function from CompatibilityCheck.jsm
@@ -742,7 +742,7 @@ window.gIncompatiblePane = {
       this.paneButton.collapsed = aHide;
       $("paneIncompatible").collapsed = aHide;
     }
-    Tabmix.setItem(this.paneButton, "show", !aHide);
+    clrtabs.setItem(this.paneButton, "show", !aHide);
 
     if (aHide && document.documentElement.lastSelected == "paneIncompatible")
       document.documentElement.showPane($(this.lastSelected));
@@ -754,7 +754,7 @@ window.gIncompatiblePane = {
 };
 
 XPCOMUtils.defineLazyGetter(gPrefWindow, "pinTabLabel", () => {
-  let win = Tabmix.getTopWin();
+  let win = clrtabs.getTopWin();
   return win.document.getElementById("context_pinTab").getAttribute("label") + "/" +
     win.document.getElementById("context_unpinTab").getAttribute("label");
 });
@@ -766,7 +766,7 @@ XPCOMUtils.defineLazyGetter(this, "RTL_UI", () => {
   return Services.locale.isAppLocaleRTL;
 });
 
-Tabmix.lazy_import(window, "Shortcuts", "Shortcuts", "Shortcuts");
+clrtabs.lazy_import(window, "Shortcuts", "Shortcuts", "Shortcuts");
 
 gPrefWindow.onContentLoaded();
 
@@ -774,7 +774,7 @@ function setDialog() {
   Object.defineProperty(customElements.get('preferences').prototype, 'instantApply', {get: () => document.documentElement.instantApply});
   customElements.define('prefwindow', class PrefWindowNoInst extends PrefWindow {
     _instantApplyInitialized = true;
-    instantApply = Tabmix.prefs.getBoolPref('instantApply');
+    instantApply = clrtabs.prefs.getBoolPref('instantApply');
   });
   if (window.toString() == '[object ChromeWindow]') window.sizeToContent();
 }
