@@ -14,7 +14,13 @@ var colorfulTabs = {
 	clrAllTabsPopPref: '',
 	isMac: '',
 	isAustralis: '',
-	clrSession:  Components.classes["@mozilla.org/browser/sessionstore;1"].getService(Components.interfaces.nsISessionStore),
+	_clrSession: Components.classes["@mozilla.org/browser/sessionstore;1"].getService(Components.interfaces.nsISessionStore),
+	get clrSession() {
+		return this._clrSession;
+	},
+	set clrSession(value) {
+		this._clrSession = value;
+	},
 	adv: null, //advanced pref enabled?1:0;
 	satmax: null, //max saturation
 	satmin: null, //min saturation
@@ -416,7 +422,7 @@ var colorfulTabs = {
 				},
 				out: null
 			};
-			window.openDialog('chrome://clrtabs/content/clrpkr.xul', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
+			window.openDialog('chrome://clrtabs/content/clrpkr.xhtml', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
 			if (params.inn.enabled) {
 				var clrNewColor = params.inn.oldColor;
 				btnObjc.setAttribute('paletteclr', clrNewColor)
@@ -591,7 +597,7 @@ var colorfulTabs = {
 			},
 			out: null
 		};
-		window.openDialog('chrome://clrtabs/content/domainclr.xul', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
+		window.openDialog('chrome://clrtabs/content/domainclr.xhtml', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
 		if (params.inn.enabled) {
 			var clrNewColor = params.inn.oldColor;
 			var domain = params.inn.domain;
@@ -774,7 +780,7 @@ var colorfulTabs = {
 		var clrObj;
 		if (document.popupNode) {
 			clrObj = document.popupNode;
-			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xul:tab")
+			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xhtml:tab")
 				clrObj = gBrowser.selectedTab;
 		} else {
 			clrObj = gBrowser.selectedTab;
@@ -793,7 +799,7 @@ var colorfulTabs = {
 		var clrObj;
 		if (document.popupNode) {
 			clrObj = document.popupNode;
-			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xul:tab")
+			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xhtml:tab")
 				clrObj = gBrowser.selectedTab;
 		} else {
 			clrObj = gBrowser.selectedTab;
@@ -930,7 +936,7 @@ var colorfulTabs = {
 		var clrObj;
 		if (document.popupNode) {
 			clrObj = document.popupNode;
-			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xul:tab")
+			if (clrObj.nodeName != ('tab') && clrObj.nodeName != "xhtml:tab")
 				clrObj = gBrowser.selectedTab;
 		} else {
 			clrObj = gBrowser.selectedTab;
@@ -954,7 +960,7 @@ var colorfulTabs = {
 		}
 		//use these anyway
 		features = "chrome,centerscreen,resizable=no,dialog=yes,toolbar,close=yes,dependent=yes";
-		var optionsURL = "chrome://clrtabs/content/clrtabsopt.xul";
+		var optionsURL = "chrome://clrtabs/content/clrtabsopt.xhtml";
 		openDialog(optionsURL, "", features);
 	},
 
@@ -1681,7 +1687,7 @@ var colorfulTabs = {
 			},
 			out: null
 		};
-		window.openDialog('chrome://clrtabs/content/clrpkr.xul', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
+		window.openDialog('chrome://clrtabs/content/clrpkr.xhtml', '_blank', 'modal,chrome,centerscreen,resizable=no, dialog=yes,close=no', params).focus();
 		if (params.inn.enabled) {
 			var clrNewColor = params.inn.oldColor;
 			colorfulTabs.setColor(clrObj, clrNewColor.toString());
