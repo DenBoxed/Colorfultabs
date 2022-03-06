@@ -1,0 +1,22 @@
+/* Styles for the colorfultabs preferences-dialog */
+#appCtPreferfences  .last{
+	height: 20px;
+}
+
+.cpkrPalette {
+	-moz-appearance:none !important;
+	min-width: 0 !important;
+	border-width: 1px !important;
+	border-top: 1px solid #fff !important;
+	border-right: 1px solid rgba(255,255,255,.5) !important;
+	border-bottom: 0 !important;
+	border-left: 1px solid rgba(255,255,255,.5) !important;
+	background-image: -moz-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.2),rgba(255,255,255,0), rgba(255,255,255,0)) !important;
+	min-height: 30px !important;
+	border-top-left-radius: 3px !important;
+	border-top-right-radius: 3px !important;
+	box-shadow: 0px 2px 3px rgba(0,0,0,.15) !important;
+	}
+.cpkrPalette:hover {
+	background-image: -moz-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5), rgba(255,255,255,0)) !important;
+}

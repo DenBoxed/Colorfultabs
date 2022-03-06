@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://clrtabs/skin/optionswindow.css" type="text/css"?>
+<prefwindow
+	id="appCtPreferences"
+	windowtype="window:prefwindow"
+	type="prefwindow"
+	title="Colorful Tabs Options"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	>
+	<prefpane id="clrtbopt" label="General">
+		<preferences>
+			<preference id="scheme" name="extensions.clrtabs.scheme" type="int"/>
+			<preference id="fadelevel" name="extensions.clrtabs.fadedeg" type="int"/>
+			<preference id="standout" name="extensions.clrtabs.standout" type="bool"/>
+			<preference id="urlbased" name="extensions.clrtabs.urlbased" type="bool"/>
+			<preference id="tablabelblink" name="extensions.clrtabs.tablabelblink" type="bool"/>
+			<preference id="uncoloredbgclr" name="extensions.clrtabs.uncoloredbgclr" type="string"/>
+			<preference id="tabtextclr" name="extensions.clrtabs.tabtextclr" type="string"/>
+			
+		</preferences>
+		<groupbox>
+			<caption label="Coloring Scheme" />
+			<vbox>
+				<radiogroup id="clrPrefs" preference="scheme">
+					<radio
+						id="clr1"
+						flex="1"
+						label="Use Default Palette."
+						value="0"
+						/>
+					<radio
+						id="clr2"
+						flex="1"
+						label="Generate Colors At Random."
+						value="1"
+						/>
+					<radio
+						id="clr3"
+						flex="1"
+						label="Generate Colors By Domain Hostname."
+						value="2"
+						/>
+					<checkbox id="urlcheck" class="indent" preference="urlbased" label="Color tabs based on URL instead of the domain or host."/>
+					<radio
+						id="clr3"
+						flex="1"
+						label="Color only the tabs you want."
+						value="3"
+						/>
+				</radiogroup>
+			</vbox>
+			</groupbox>
+			<groupbox>
+				<caption label="Tab Highlight" />
+				<vbox>
+				<label>Fading of unselected tab.</label>
+				<menulist id="fadedeg" preference="fadelevel">
+					<menupopup>
+					<menuitem label="0 (No tab fading)" value="0"/>
+					<menuitem label="1 (minimum)" value="1"/>
+					<menuitem label="2" value="2"/>
+					<menuitem label="3" value="3"/>
+					<menuitem label="4" value="4"/>
+					<menuitem label="5" value="5"/>
+					<menuitem label="6" value="6"/>
+					<menuitem label="7" value="7"/>
+					<menuitem label="8" value="8"/>
+					<menuitem label="9 (maximum)" value="9"/>
+					</menupopup>
+				</menulist>
+				<checkbox id="standoutcheck" preference="standout" label="Highlight the currently selected tab."/>
+				<checkbox id="tablabelblinkcheck" preference="tablabelblink" label="Blink the currently selected tab on hover/mouse-over."/>
+				<label>Background style for uncolored tab when using Coloring Scheme 4.</label>
+				<box>
+					<colorpicker open="true" preference='uncoloredbgclr' type="button" id="uncoloredbgselector" style="margin-left:30px;"/>
+				</box>
+				<label>Color of tab-label.</label>
+				<box>
+					<colorpicker open="true" preference='tabtextclr' type="button" id="tabtextclrpkr" style="margin-left:30px;"/>
+				</box>
+				</vbox>
+		</groupbox>
+		</prefpane>
+		<prefpane id="clrtbstyles" label="Styles" onpaneload="colorfulTabs.colorfulTabsOptions.clrPrefPaneLoad(event);">
+		<preferences>
+			<preference id="clrCtxMenu" name="extensions.clrtabs.menu" type="bool"/>
+			<preference id="clrAllTabsPopPref" name="extensions.clrtabs.clrAllTabsPopPref" type="bool"/>
+			<preference id="pminify" name="extensions.clrtabs.minify" type="bool"/>
+			<preference id="borderradius" name="extensions.clrtabs.tabradius" type="int"/>
+			<!-- <preference id="clrReverse" name="extensions.clrtabs.txtreverse" type="bool"/> -->
+			<preference id="clrBgPic" name="extensions.clrtabs.bgpic" type="bool"/>
+			<preference id="clrBgPicPath" name="extensions.clrtabs.bgpicpath" type="string"/>
+		</preferences>
+		<groupbox>
+			<caption label="Tab Styles" />
+ 			<vbox>
+				<checkbox id="clrCtxMenu" label="Enable context menu on the tabs." preference="clrCtxMenu" />
+				<checkbox id="clrAllTabsPop" label="Enable coloring the All-Tabs-Popup menu." preference="clrAllTabsPopPref" />
+				<checkbox id="clrMinify" label="Minify Tabs." preference="pminify" />
+				<label>Tab Border Radius.</label>
+				<menulist id="tabradius" preference="borderradius">
+					<menupopup>
+					<menuitem label="0 (No rounded borders)" value="0"/>
+					<menuitem label="1" value="1"/>
+					<menuitem label="2" value="2"/>
+					<menuitem label="3" value="3"/>
+					<menuitem label="4" value="4"/>
+					<menuitem label="5" value="5"/>
+					<menuitem label="6" value="6"/>
+					<menuitem label="7" value="7"/>
+					<menuitem label="8" value="8"/>
+					<menuitem label="9" value="9"/>
+					</menupopup>
+				</menulist>
+				<checkbox id="clrTabBgnd"  preference="clrBgPic"  label="Enable a background image for tabs." tooltiptext="Not recommended with Personas"  oncommand="document.getElementById('image-path').disabled=!this.checked;document.getElementById('browseBgnd').disabled=!this.checked"   />
+				<textbox id="image-path"   preference="clrBgPicPath"  />
+				<button label="Browse..." oncommand="colorfulTabs.colorfulTabsOptions.browsebgnd();" id="browseBgnd"  />
+				<description>Get a beautiful <html:a  style="color:blue;text-decoration:underline;cursor:pointer" onclick="colorfulTabs.wOpen('http://www.addongenie.com/stripe-generator')">stripe pattern</html:a> or a <html:a  style="color:blue;text-decoration:underline;cursor:pointer" onclick="colorfulTabs.wOpen('http://www.addongenie.com/polka-dot-pattern-generator')">polka dot pattern</html:a> to use as a</description>
+				<description>background image.</description>
+			</vbox>
+		</groupbox>
+	</prefpane>
+	<prefpane id="domainclrs" label="Presets" orient="vertical" onpaneload="colorfulTabs.colorfulTabsOptions.setDomainPref();colorfulTabs.colorfulTabsOptions.setPalette();colorfulTabs.colorfulTabsOptions.changeUI(document.getElementById('denabled'),0);">
+		<preferences>
+			<preference id="enabledomain" name="extensions.clrtabs.enabledomain" type="bool" />
+			<preference id="dpref" name="extensions.clrtabs.dpref" type="string" />
+			<preference id="ppref" name="extensions.clrtabs.ppref" type="string" />
+		</preferences>
+		<groupbox disabled="true">
+			<caption label="Preset Domain Colors" />
+			<vbox>
+				<label class="text-link" style="cursor:pointer" tooltiptext="Visit QuickStart Guide" onclick="colorfulTabs.wOpen('http://www.addongenie.com/colorfultabs-documentation-and-help');" value="See Documentation" />
+				<label>To delete a domain, blank it out and save.</label>
+			</vbox>
+			<checkbox id="denabled" label="Enable Preset Domain Colors" preference="enabledomain" oncommand="colorfulTabs.colorfulTabsOptions.changeUI(this,1)" />
+			<grid  style="height:200px; overflow-y:auto;overflow-x:hidden;" id="colorfulTabsDomains" preference-editable="true" preference="dpref" onsynctopreference="return colorfulTabs.colorfulTabsOptions.saveDomains();">
+				<columns>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+    				</columns>
+				<rows id="domainrows">
+				<row><label value="Domain" flex="1"/><label value="Color" flex="1"/><label value="Color Picker" flex="1"/></row>
+				</rows>
+			</grid>
+			<button id="adddomain" label="Add Domain" oncommand="colorfulTabs.colorfulTabsOptions.addDomain();"/>
+			<label class="text-link" onclick="colorfulTabs.wOpen('http://www.addongenie.com/colorfultabs-documentation-and-help#epref')" value="RegEx are allowed" tooltiptext="Regular Expressions allow powerful matching options."/>
+		</groupbox>
+		<groupbox>
+			<caption label="Customize The Colors In The Default Palette (Coloring Scheme-I)" />
+			<grid style="height:100px; overflow-y:auto;overflow-x:hidden;" id="colorfulTabsPalette">
+				<columns>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+					<column flex="1"/>
+				</columns>
+				<rows id="palettecolors">
+
+					<row flex="1">
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+					</row>
+					<row flex="1">
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+					</row>
+					<row flex="1">
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+					</row>
+					<row flex="1">
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+						<button open="true" class="cpkrPalette" oncommand="colorfulTabs.colorfulTabsOptions.savePalette(this)" />
+					</row>
+				</rows>
+			</grid>
+			</groupbox>
+	</prefpane>
+	<prefpane id="tweaks" label="Tweaks" onpaneload="colorfulTabs.colorfulTabsOptions.tweakspaneload();">
+		<preferences>
+			<preference id="txtshadow" name="extensions.clrtabs.txtshadow" type="bool"/>
+			<preference id="aggressive" name="extensions.clrtabs.aggressive" type="bool"/>
+			<preference id="currenttab" name="extensions.clrtabs.currenttab" type="bool"/>
+			<preference id="dispstack" name="extensions.clrtabs.dispstack" type="bool"/>
+			<preference id="currenttabclr" name="extensions.clrtabs.currenttabclr" type="string"/>
+		</preferences>
+		<groupbox>
+			<caption><label>General Tweaks</label></caption>
+			<checkbox label="Enable Tab Text Glow" id='txtshadowenable' preference='txtshadow' oncommand="colorfulTabs.colorfulTabsOptions.preftxtshadow(this.checked);" />
+			<checkbox label="Enable Fixed Background Color For Currently Selected Tab" id='currenttabenable' preference='currenttab' tooltiptext="Uncheck Aggressive Mode to enable." oncommand="document.getElementById('currentclrselector').disabled = ! this.checked" />
+			<box><colorpicker open="true" preference='currenttabclr' type="button" id="currentclrselector" style="margin-left:30px;"/></box>
+			<checkbox label="Display Tab-Stack below the tabs (the thick colored line)" id='dispstackenable' preference='dispstack'/>
+			<label class="text-link" style="cursor:pointer" tooltiptext="Feature Requests" onclick="colorfulTabs.wOpen('http://www.addongenie.com/forums/');" >Request more compatibility tweaks with other addons/themes here.</label>
+		</groupbox>
+		<groupbox>
+			<caption><label>Compatibility Tweaks</label></caption>
+			<checkbox label="Aggressive Mode (Prevent other addons from breaking ColorfulTabs)" id='aggressiveenable' preference='aggressive' oncommand="document.getElementById('currenttabenable').disabled = this.checked;document.getElementById('currentclrselector').disabled = this.checked;" />	
+		</groupbox>
+	</prefpane>
+	<prefpane id="functions" label="Utility Features">
+		<preferences>
+			<preference id="dblclicktabaction" name="extensions.clrtabs.dblclicktabaction" type="string"/>
+			<preference id="dblclicktabbaraction" name="extensions.clrtabs.dblclicktabbaraction" type="string"/>
+			<preference id="mdlclicktabaction" name="extensions.clrtabs.mdlclicktabaction" type="string"/>
+			<preference id="mdlclicktabbaraction" name="extensions.clrtabs.mdlclicktabbaraction" type="string"/>
+		</preferences>
+			<tabbox>
+			<tabs>
+				<tab label="Double Click" />
+				<tab label="Middle Click" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<groupbox flex="1">
+						<caption label="Double Click Action" />
+						<label>On a tab</label>
+						<menulist id="ctdblclicktabaction" preference="dblclicktabaction">
+							<menupopup>
+								<menuitem label="—Nothing—" value="none"/>
+								<menuitem label="Close Tab" value="ctclosetab"/>
+								<menuitem label="Reload Tab" value="ctreloadtab"/>
+							</menupopup>
+						</menulist>
+						<label>On the tabbar</label>
+						<menulist id="ctdblclicktabbaraction" preference="dblclicktabbaraction">
+							<menupopup>
+								<menuitem label="—Nothing—" value="none"/>
+								<menuitem label="Open new tab" value="ctopentab"/>
+								<menuitem label="Undo Close Tab" value="ctundoclosetab"/>
+							</menupopup>
+						</menulist>
+						<caption label=" *Restart for changes"/>
+					</groupbox>
+				</tabpanel>
+				<tabpanel orient="vertical">
+					<groupbox flex="1">
+						<caption label="Middle Click Action" />
+						<label>On a tab</label>
+						<menulist id="ctmdlclicktabaction" preference="mdlclicktabaction">
+							<menupopup>
+								<menuitem label="—Nothing—" value="none"/>
+								<menuitem label="Close Tab" value="ctclosetab"/>
+								<menuitem label="Reload Tab" value="ctreloadtab"/>
+							</menupopup>
+						</menulist>
+						<label>On the tabbar</label>
+						<menulist id="ctmdlclicktabbaraction" preference="mdlclicktabbaraction">
+							<menupopup>
+								<menuitem label="—Nothing—" value="none"/>
+								<menuitem label="Open new tab" value="ctopentab"/>
+								<menuitem label="Undo Close Tab" value="ctundoclosetab"/>
+							</menupopup>
+						</menulist>
+						<caption label=" *Restart for changes"/>
+				</groupbox>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+			
+		
+	</prefpane>
+	<prefpane id="advOpt"  label="Color Fine-Tuning" onpaneload="colorfulTabs.colorfulTabsOptions.advPrefInit();">
+		<preferences>
+			<preference id="adv" name="extensions.clrtabs.advanced" type="bool"/>
+			<preference id="satmin" name="extensions.clrtabs.satmin" type="int"/>
+			<preference id="satmax" name="extensions.clrtabs.satmax" type="int"/>
+			<preference id="lummax" name="extensions.clrtabs.lummax" type="int"/>
+			<preference id="lummin" name="extensions.clrtabs.lummin" type="int"/>
+			<preference id="sat" name="extensions.clrtabs.sat" type="int"/>
+			<preference id="lum" name="extensions.clrtabs.lum" type="int"/>
+		</preferences>
+		<groupbox>
+			<caption><label>Colour Fine-Tuning Options</label></caption>
+			<checkbox label="Enable Fine-Tuning Options" id='advenable' preference='adv' oncommand="colorfulTabs.colorfulTabsOptions.adv_toggle_state(this.checked);" />
+			<groupbox id="adv_group"  style="visibility:hidden;">
+				<grid>
+					<rows>
+						<row>
+							<label />
+							<label value="Minimum" />
+							<label value="Maximum" />
+						</row>
+						<row>
+							<label value="Saturation%" />
+							<textbox id='satmin' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='satmin'/>
+							<textbox id='satmax' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='satmax'/>
+						</row>
+						<row>
+							<label value="Luminance%" />
+							<textbox id='lummin' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='lummin'/>
+							<textbox id='lummax' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='lummax'/>
+						</row>
+					</rows>
+				</grid>
+				<button label="Reset" oncommand="colorfulTabs.colorfulTabsOptions.resetPref()"/>
+			</groupbox>
+			<groupbox id='adv_group2' style="visibility:hidden;">
+				<grid>
+					<rows>
+						<row>
+							<label value="Saturation%" />
+							<textbox id='sat' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='sat'/>
+						</row>
+						<row>
+							<label value="Luminance%" />
+							<textbox id='lum' maxlength='3' size='3'  style='border:1px inset silver;' oninput='colorfulTabs.colorfulTabsOptions.val(this)' preference='lum'/>
+						</row>
+					</rows>
+				</grid>
+				<button label="Reset" oncommand="colorfulTabs.colorfulTabsOptions.resetPref()"/>
+			</groupbox>
+		</groupbox>
+		
+	</prefpane>
+	<prefpane
+		id="cthelp"
+		label="Troubleshooting &amp; Help"
+		>
+		<preferences>
+			<preference id="consolelog" name="extensions.clrtabs.consolelog" type="bool"/>
+		</preferences>
+ 		<groupbox>
+			<caption label="Help and Resources" />
+			<vbox>
+				<label class="text-link" style="cursor:pointer" tooltiptext="Visit Help and Documentation" onclick="colorfulTabs.wOpen('http://www.addongenie.com/colorfultabs-documentation-and-help');" value="Help and Documentation" />
+				<label class="text-link" style="cursor:pointer" tooltiptext="Visit the support forums" onclick="colorfulTabs.wOpen('http://www.addongenie.com/forums/')" value="Support Forums" />
+				<label class="text-link" style="cursor:pointer" tooltiptext="Reinstall an old version" onclick="colorfulTabs.wOpen('https://addons.mozilla.org/en-us/firefox/addon/colorfultabs/versions/');" value="Revert to older version" />
+				<label class="text-link" style="cursor:pointer" tooltiptext="FfChrome For Firefox" onclick="colorfulTabs.wOpen('https://addons.mozilla.org/en-US/firefox/addon/ffchrome/')" value="FfChrome &#8212; An intelligent addon to slicken your context menu" />
+			</vbox>
+		</groupbox>
+		<groupbox>
+			<caption label="Other Resources" />
+			<box orient="horizontal" width="100">
+				<box orient="vertical">
+					<label  style="font-family:serif;font-size:large;font-style:italic;" value="ColorfulTabs is free. However it helps me if" />
+					<label style="font-family:serif;font-size:large;font-style:italic;" value="you would use any one of my services as a token" />
+					<label style="font-family:serif;font-size:large;font-style:italic;" value="of support. Thank you for using ColorfulTabs!" />
+					<label class="text-link" style="border-left: 1px dotted gray;padding-left: .68em;margin:.68em;cursor:pointer;font-family:'Times New Roman', Times, serif;font-size: large;font-style:italic;" tooltiptext="Share some love!" onclick="colorfulTabs.wOpen('http://www.addongenie.com/fr/colorfultabs?a=1')"><label style="font-weight:bold">&#9829;</label> Contribute</label>
+				</box>
+				<box>
+					<image src='developer.png' width='100' height='100' />
+					<spacer flex="1"/>
+				</box>
+			</box>
+			<vbox>
+				<label class="text-link" style="cursor:pointer" tooltiptext="Website Design &amp; Digital Media for RDNs" onclick="colorfulTabs.wOpen('https://www.dezignbites.com/')">DezignBites.Com &#8212; Website Design &amp; Digital Media for RDNs</label>
+				<label class="text-link" style="cursor:pointer" tooltiptext="Web Development Services" onclick="colorfulTabs.wOpen('https://www.binaryturf.com/')">BinaryTurf.Com &#8212; WordPress &amp; SEO to boost your business revenues.</label>
+				<label class="text-link" style="cursor:pointer" tooltiptext="APN Photography School" onclick="colorfulTabs.wOpen('http://www.apnphotographyschool.com/about')">APN Photography School &#8212; Photography tips and web design services for photographers.</label>
+			</vbox>
+		</groupbox>
+		<groupbox>
+			<caption label="Tools" />
+			<vbox>
+			<box>
+				<checkbox label="Enable Console Logging (Developmental Use)" id='consolelogenable' preference='consolelog' />
+			</box>
+			<box>
+				<button label="Reset ColorfulTabs Preferences (Needs Browser Restart)" oncommand="colorfulTabs.colorfulTabsOptions.resetPrefs();"/>
+			</box>
+			</vbox>
+		</groupbox>
+		</prefpane>
+<script type="application/javascript" src="chrome://clrtabs/content/clrtabs.js" />
+</prefwindow>

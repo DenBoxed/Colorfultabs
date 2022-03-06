@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<overlay id="clrtabs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml"
+>
+	<keyset>
+		<key id="colorfulTabsRecolorMI" modifiers="alt shift" key="R" oncommand="colorfulTabs.regenClr();"/>
+		<key id="colorfulTabsAddDomain" modifiers="alt shift" key="A" oncommand="colorfulTabs.setDomainPref();"/>
+		<key id="colorfulTabsScroller" modifiers="alt shift" key="C" oncommand="colorfulTabs.clrScroll();"/>
+		<key id="colorfulTabsChangeTabColor" modifiers="alt shift" key="X" oncommand="colorfulTabs.setUserClr();"/>
+		<key id="colorfulTabsResetColor" modifiers="alt shift" key="Z" oncommand="colorfulTabs.resetTabClr();"/>
+		<key id="colorfulTabsShowOptions" modifiers="alt shift" key="W" oncommand="colorfulTabs.showOptions();"/>
+		<key id="colorfulTabsMinify" modifiers="alt shift" key="G" oncommand="colorfulTabs.toggleMinify();"/>
+		<key id="colorfulTabsOpen" modifiers="alt control" key="T" oncommand="colorfulTabs.openTabHere();"/>
+		<key id="colorfulTabsBegining" modifiers="alt control" key="B" oncommand="colorfulTabs.sendTabBegining();"/>
+		<key id="colorfulTabsEnd" modifiers="alt control" key="E" oncommand="colorfulTabs.sendTabEnd();"/>
+	</keyset> 
+	<script type="application/x-javascript" src="clrtabs.js" />
+	<script type="application/x-javascript">
+		<![CDATA[
+		window.addEventListener('load', colorfulTabs.clrtabsInit, false);
+		window.addEventListener('load', colorfulTabsfrObserver.register, false);
+		window.addEventListener('unload', colorfulTabsfrObserver.unregister, false);
+		window.addEventListener('unload', colorfulTabs.clrtabsUnload, false);
+		]]>
+	</script>
+	<toolbox id="navigator-toolbox">    
+		<stack style="" flex="1" class="tabs-stack" id="colorfulTabsStack" position="1">
+			<vbox >
+				<spacer flex="2" />
+				<hbox class="tabs-bottom" align="center" />
+			</vbox>
+		</stack>   
+	</toolbox>
+</overlay>
